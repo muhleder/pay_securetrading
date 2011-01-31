@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * Implements hook_pay_method_handler_info().
+ */
+function pay_securetrading_pay_method_handler_info() {
+  return array(
+    'pay_method_gateway_pay_securetrading' => array(
+      'title' => t('Secure Trading'),
+      'description' => t('Payment processing using the Secure Trading payment gateway'),
+      'parent' => 'pay_method_direct',
+      'module' => 'pay',
+      'path' => drupal_get_path('module', 'pay_securetrading') .'/includes/handlers',
+    ),
+  );
+}
+
+
+/*
+ * Build a form that will be POSTED to Secure Trading.
+ */
+function pay_securetrading_form($form_state, $transaction, $pay_method) {
+  $fields = $pay_method->post_fields($transaction);
+  $form['#action'] = 'https://pay_securetrading.net/authorize/form.cgi';
+  $form['#id'] = 'form-' . md5(uniqid(mt_rand(), TRUE));
+  $form['description'] = array(
+    '#prefix' => '<div>',
+    '#type' => 'markup',
+    '#value' => $pay_method->confirmation_text,
+    '#suffix' => '</div>',
+    '#weight' => -10,
+  );
+  $form['amount_display'] = array(
+    '#prefix' => '<div><span>'. t('Amount') .' </span>',
+    '#value' => $pay_method->currency_symbol() . number_format($fields['amount']/100, 2, '.', ''),
+    '#suffix' => '</div>',
+    '#type' => 'markup',
+  );
+  foreach ($fields as $name => $value) {
+    $form[$name]['#type'] = 'hidden';
+    $form[$name]['#title'] = $name;
+    $form[$name]['#value'] = $value;
+  }
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#weight' => 10,
+    '#value' => $pay_method->checkout_button,
+  );
+  return $form;
+}
+

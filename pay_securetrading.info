@@ -1,0 +1,5 @@
+name = Secure Trading
+description = Support for the Secure Trading payment gatway through the Payment API
+package = Payment API
+dependencies[] = pay
+core = 6.x
