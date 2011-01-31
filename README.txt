@@ -1,6 +1,6 @@
-This module provides a form for the Pay module which will POST data to the securetrading payment processer, where CC information is entered.
+This module provides a form for the Pay module which will POST data to the Securetrading Payment Processer, where CC information is entered.
 
-The module works by caching the Drupal form object that, before replacing the action with the url of the Payment Processor.
+The module works by caching the Drupal form object, before replacing the action with the url of the Payment Processor.
 
 When the response comes back from the Payment Processor, the cached Drupal form object is rebuilt and submitted.
 
